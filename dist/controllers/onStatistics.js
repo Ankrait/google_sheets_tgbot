@@ -10,53 +10,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.onStatistics = void 0;
-const utils_1 = require("../common/utils");
 const appConstants_1 = require("../common/appConstants");
 const editLastMessage_1 = require("../common/utils/editLastMessage");
-const onStatistics = (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+const services_1 = require("../services/services");
+const getMoneyString_1 = require("../common/utils/getMoneyString");
+const getDateString_1 = require("../common/utils/getDateString");
+const onStatistics = (ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = ctx.from.id;
+    const isAdmin = yield (0, services_1.getIsAdmin)(userId);
+    if (isAdmin) {
+        yield next();
+        return;
+    }
     yield ctx.sendChatAction('typing');
     const { message_id } = yield ctx.reply('Загрузка...');
-    const userTable = yield (0, utils_1.getTable)('users');
-    const daysTable = yield (0, utils_1.getTable)('days');
-    const id = ctx.from.id;
-    const userRow = (0, utils_1.getUserRowFromTable)(userTable, id);
-    if (userRow === null) {
-        return (0, editLastMessage_1.editLastMessage)(ctx, message_id, appConstants_1.userNotFoundMessage);
-    }
-    const userDeposit = (0, utils_1.getNumber)(userTable[userRow][2]);
-    const userDateIn = (0, utils_1.parseDate)(userTable[userRow][0]);
-    if (!userDateIn) {
-        return yield (0, editLastMessage_1.editLastMessage)(ctx, message_id, '**Ошибка данных**');
-    }
-    let userStatistics = [];
-    let lastDayBalance = userDeposit;
-    let dayBalance = 0;
-    for (let dayI = 0; dayI < daysTable.length; dayI++) {
-        const currentDate = (0, utils_1.parseDate)(daysTable[dayI][1]);
-        if (!currentDate) {
-            continue;
-        }
-        dayBalance =
-            lastDayBalance * ((0, utils_1.getNumber)(daysTable[dayI][3]) / (0, utils_1.getNumber)(daysTable[dayI][2]));
-        if (+currentDate >= +userDateIn) {
-            const value = {
-                day: currentDate.toLocaleDateString(),
-                value: Math.round((dayBalance - lastDayBalance) / 2 * 100) / 100,
-            };
-            userStatistics.push(value);
-        }
-        lastDayBalance = dayBalance;
+    const response = yield (0, services_1.getStatistics)(userId);
+    if (!response) {
+        return yield (0, editLastMessage_1.editLastMessage)(ctx, message_id, appConstants_1.userNotFoundMessage);
     }
     let resultMessage = '';
-    userStatistics.forEach((element) => {
+    response.forEach((day) => {
         resultMessage +=
-            element.day +
+            (0, getDateString_1.getDateString)(day.day) +
                 '  ---  ' +
-                (element.value > 0 ? '✅ ' : '🔻 ') +
-                '$' +
-                Math.abs(element.value) +
-                '\n';
+                (day.profit > 0 ? '✅ ' : '🔻 ') +
+                '<b>' +
+                (0, getMoneyString_1.getMoneyString)(Math.abs(day.profit)) +
+                '</b>\n';
     });
-    (0, editLastMessage_1.editLastMessage)(ctx, message_id, resultMessage);
+    (0, editLastMessage_1.editLastMessage)(ctx, message_id, resultMessage, { parse_mode: 'HTML' });
 });
 exports.onStatistics = onStatistics;

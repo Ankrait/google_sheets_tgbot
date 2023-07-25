@@ -12,45 +12,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.onDayProfit = void 0;
 const utils_1 = require("../common/utils");
 const appConstants_1 = require("../common/appConstants");
-const onDayProfit = (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+const services_1 = require("../services/services");
+const onDayProfit = (ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = ctx.from.id;
+    const isAdmin = yield (0, services_1.getIsAdmin)(userId);
+    if (isAdmin) {
+        yield next();
+        return;
+    }
     yield ctx.sendChatAction('typing');
     const { message_id } = yield ctx.reply('Загрузка...');
-    const userTable = yield (0, utils_1.getTable)('users');
-    const daysTable = yield (0, utils_1.getTable)('days');
-    const id = ctx.from.id;
-    const userRow = (0, utils_1.getUserRowFromTable)(userTable, id);
-    if (userRow === null) {
+    const response = yield (0, services_1.getDayProfit)(userId);
+    if (!response) {
         return yield (0, utils_1.editLastMessage)(ctx, message_id, appConstants_1.userNotFoundMessage);
     }
-    const userDeposit = (0, utils_1.getNumber)(userTable[userRow][2]);
-    const userProfit = (0, utils_1.getNumber)(userTable[userRow][5]);
-    const userDateIn = (0, utils_1.parseDate)(userTable[userRow][0]);
-    if (!userDateIn) {
-        return yield (0, utils_1.editLastMessage)(ctx, message_id, '**Ошибка данных**');
-    }
-    let lastDatePos = -1;
-    for (let dayI = 0; dayI < daysTable.length; dayI++) {
-        const currentDate = (0, utils_1.parseDate)(daysTable[dayI][1]);
-        if (!currentDate) {
-            continue;
-        }
-        if (+currentDate >= +userDateIn) {
-            lastDatePos = dayI;
-        }
-    }
-    if (lastDatePos === -1) {
-        return yield (0, utils_1.editLastMessage)(ctx, message_id, '$0');
-    }
-    const originalBalance = userDeposit + userProfit * 2;
-    let dayProfit = (originalBalance -
-        originalBalance /
-            ((0, utils_1.getNumber)(daysTable[lastDatePos][3]) / (0, utils_1.getNumber)(daysTable[lastDatePos][2]))) /
-        2;
-    dayProfit = Math.round(dayProfit * 100) / 100;
-    yield (0, utils_1.editLastMessage)(ctx, message_id, (dayProfit > 0 ? '✅ ' : '🔻 ') +
-        '$' +
+    yield (0, utils_1.editLastMessage)(ctx, message_id, (response.profit > 0 ? '✅ ' : '🔻 ') +
         '<b>' +
-        Math.abs(dayProfit).toString().replace('.', ',') +
+        (0, utils_1.getMoneyString)(Math.abs(response.profit)) +
         '</b>', { parse_mode: 'HTML' });
 });
 exports.onDayProfit = onDayProfit;

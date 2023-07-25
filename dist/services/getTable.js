@@ -11,10 +11,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTable = void 0;
 const googleapis_1 = require("googleapis");
-const config_1 = require("../../config/config");
+const config_1 = require("../config/config");
 const getTable = (type) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const range = type === 'users' ? 'A:H' : 'J:M';
+    let range;
+    switch (type) {
+        case 'users':
+            range = 'A:H';
+            break;
+        case 'admin':
+            range = 'Q:Q';
+            break;
+        default:
+            range = 'J:M';
+            break;
+    }
     try {
         const sheet = googleapis_1.google.sheets({ version: 'v4', auth: (0, config_1.getConfig)('GOOGLE_API_KEY') });
         const response = yield sheet.spreadsheets.values.get({
@@ -22,7 +33,8 @@ const getTable = (type) => __awaiter(void 0, void 0, void 0, function* () {
             range: `${(0, config_1.getConfig)('SHEET_NAME')}!${range}`,
             prettyPrint: true,
         });
-        return (_a = response.data.values) === null || _a === void 0 ? void 0 : _a.slice(2);
+        const sliceStart = type === 'admin' ? 0 : 2;
+        return (_a = response.data.values) === null || _a === void 0 ? void 0 : _a.slice(sliceStart);
     }
     catch (_b) {
         return [];

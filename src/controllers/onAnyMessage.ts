@@ -1,7 +1,13 @@
 import { Context } from 'telegraf';
-import { Update } from 'telegraf/types';
-import { defaultMarkup } from '../markups/default';
+import { defaultMarkup } from '../markups/defaultMarkup';
+import { adminMarkup } from '../markups/adminMarkup';
+import { getIsAdmin } from '../services/services';
 
-export const onAnyMessage = (ctx: Context<Update>) => {
-	ctx.reply('Выберите действие', defaultMarkup());
+export const onAnyMessage = async (ctx: Context) => {
+	const userId = ctx.from!.id;
+	const isAdmin = await getIsAdmin(userId);
+
+	const markup = isAdmin ? adminMarkup : defaultMarkup;
+
+	ctx.reply('Выберите действие', markup);
 };

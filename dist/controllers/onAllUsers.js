@@ -9,32 +9,35 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onFinance = void 0;
+exports.onAllUsers = void 0;
 const utils_1 = require("../common/utils");
-const appConstants_1 = require("../common/appConstants");
 const services_1 = require("../services/services");
 const getMoneyString_1 = require("../common/utils/getMoneyString");
-const onFinance = (ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
+const onAllUsers = (ctx, next) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = ctx.from.id;
     const isAdmin = yield (0, services_1.getIsAdmin)(userId);
-    if (isAdmin) {
+    if (!isAdmin) {
         yield next();
         return;
     }
     yield ctx.sendChatAction('typing');
     const { message_id } = yield ctx.reply('Загрузка...');
-    const user = yield (0, services_1.getUserFinance)(userId);
-    if (!user) {
-        return yield (0, utils_1.editLastMessage)(ctx, message_id, appConstants_1.userNotFoundMessage);
-    }
-    yield (0, utils_1.editLastMessage)(ctx, message_id, 'Депозит: <b>' +
-        (0, getMoneyString_1.getMoneyString)(user.deposit) +
-        '</b>\nТекущий баланс: <b>' +
-        (0, getMoneyString_1.getMoneyString)(user.balance) +
-        '</b>\nПрибыль/убыток: ' +
-        (user.profit > 0 ? '✅ ' : '🔻 ') +
-        '<b>' +
-        (0, getMoneyString_1.getMoneyString)(Math.abs(user.profit)) +
-        '</b>\n', { parse_mode: 'HTML' });
+    const users = yield (0, services_1.getAllUsers)();
+    let resultMessage = '';
+    users.forEach((user) => {
+        resultMessage +=
+            '<b>' +
+                user.name +
+                '</b>\nДепозит: <b>' +
+                (0, getMoneyString_1.getMoneyString)(user.deposit) +
+                '</b>\nБаланс: <b>' +
+                (0, getMoneyString_1.getMoneyString)(user.balance) +
+                '</b>\nПрофит: ' +
+                (user.profit > 0 ? '✅ ' : '🔻 ') +
+                '<b>' +
+                (0, getMoneyString_1.getMoneyString)(Math.abs(user.profit)) +
+                '</b>\n\n';
+    });
+    yield (0, utils_1.editLastMessage)(ctx, message_id, resultMessage, { parse_mode: 'HTML' });
 });
-exports.onFinance = onFinance;
+exports.onAllUsers = onAllUsers;
