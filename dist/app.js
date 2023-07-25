@@ -5,7 +5,7 @@ const filters_1 = require("telegraf/filters");
 const enums_1 = require("./common/enums");
 const controllers_1 = require("./controllers");
 const config_1 = require("./config/config");
-const bot = new telegraf_1.Telegraf((0, config_1.getConfig)('TOKEN2'));
+const bot = new telegraf_1.Telegraf((0, config_1.getConfig)('TOKEN'));
 bot.start(controllers_1.start);
 bot.hears(enums_1.userActionsEnum.Finance, controllers_1.onFinance);
 bot.hears(enums_1.userActionsEnum.DayProfit, controllers_1.onDayProfit);

@@ -13,7 +13,7 @@ import {
 } from './controllers';
 import { getConfig } from './config/config';
 
-const bot = new Telegraf(getConfig('TOKEN2'));
+const bot = new Telegraf(getConfig('TOKEN'));
 
 bot.start(start);
 bot.hears(userActionsEnum.Finance, onFinance);
