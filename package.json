@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --watch src/**/*.ts --exec \"ts-node\" index.ts",
-    "start": "npm pm2 index.ts --watch"
+    "start": "pm2 index.ts --watch"
   },
   "dependencies": {
     "@types/dotenv": "^8.2.0",
