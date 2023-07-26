@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --watch src/**/*.ts --exec \"ts-node\" index.ts",
     "build": "rimraf dist & tsc --build",
-    "start": "pm2 dist/index.js --watch -i max"
+    "start": "pm2 start dist/index.js --watch -i max"
   },
   "dependencies": {
     "@types/dotenv": "^8.2.0",
