@@ -13,7 +13,7 @@ import {
 } from './controllers';
 import { getConfig } from './config/config';
 
-const bot = new Telegraf(getConfig('TOKEN'));
+export const bot = new Telegraf(getConfig('TOKEN2'));
 
 bot.start(start);
 bot.hears(userActionsEnum.Finance, onFinance);
@@ -25,7 +25,3 @@ bot.hears(adminActionsEnum.AllUsers, onAllUsers);
 bot.hears(adminActionsEnum.Statistics, inDev);
 
 bot.on(message(), onAnyMessage);
-
-bot.launch().then(() => {
-	console.log('Бот запущен');
-});
