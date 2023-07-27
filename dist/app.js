@@ -5,7 +5,7 @@ const telegraf_1 = require("telegraf");
 const controllers_1 = require("./controllers");
 const enums_1 = require("./common/enums");
 const config_1 = require("./config/config");
-exports.bot = new telegraf_1.Telegraf((0, config_1.getConfig)('TOKEN_DEV'));
+exports.bot = new telegraf_1.Telegraf((0, config_1.getConfig)('TOKEN'));
 exports.bot.start(controllers_1.start);
 exports.bot.hears(enums_1.userActionsEnum.Finance, controllers_1.onFinance);
 exports.bot.hears(enums_1.userActionsEnum.DayProfit, controllers_1.onDayProfit);
