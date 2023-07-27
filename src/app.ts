@@ -13,7 +13,7 @@ import {
 import { adminActionsEnum, userActionsEnum } from './common/enums';
 import { getConfig } from './config/config';
 
-export const bot = new Telegraf(getConfig('TOKEN_DEV'));
+export const bot = new Telegraf(getConfig('TOKEN'));
 
 bot.start(start);
 
