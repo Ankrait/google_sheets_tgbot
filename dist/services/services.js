@@ -15,7 +15,7 @@ const getTable_1 = require("./getTable");
 const getUserRowFromTable_1 = require("./getUserRowFromTable");
 const getUserFinance = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const userTable = yield (0, getTable_1.getTable)('users');
-    const userRow = (0, getUserRowFromTable_1.getUserRowFromTable)(userTable, id);
+    const userRow = (0, getUserRowFromTable_1.getUserRow)(userTable, id);
     if (userRow === null)
         return null;
     return {
@@ -107,16 +107,24 @@ const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
 exports.getAllUsers = getAllUsers;
 const getDaysStats = () => __awaiter(void 0, void 0, void 0, function* () {
     const daysTable = yield (0, getTable_1.getTable)('days');
+    if (daysTable.length === 0) {
+        return [];
+    }
     const result = [];
     for (let dayI = 0; dayI < daysTable.length; dayI++) {
-        const currentDate = (0, utils_1.parseDate)(daysTable[dayI][1]);
-        if (!currentDate) {
+        const day = (0, utils_1.parseDate)(daysTable[dayI][1]);
+        if (!day) {
+            continue;
+        }
+        const startBalance = (0, utils_1.getNumber)(daysTable[dayI][2]);
+        const endBalance = (0, utils_1.getNumber)(daysTable[dayI][3]);
+        if (startBalance === endBalance) {
             continue;
         }
         result.push({
-            day: currentDate,
-            startBalance: (0, utils_1.getNumber)(daysTable[dayI][2]),
-            endBalance: (0, utils_1.getNumber)(daysTable[dayI][3]),
+            day,
+            startBalance,
+            endBalance,
         });
     }
     return result;

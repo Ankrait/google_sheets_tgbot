@@ -2,7 +2,7 @@ import { Markup } from 'telegraf';
 import { adminActionsEnum } from '../common/enums';
 
 export const adminMarkup = Markup.keyboard(
-	[adminActionsEnum.AllUsers, adminActionsEnum.Statistics, 'Рассылка'],
+	[adminActionsEnum.AllUsers, adminActionsEnum.DaysStats],
 	{
 		columns: 2,
 	}

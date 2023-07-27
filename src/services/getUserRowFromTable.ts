@@ -1,4 +1,4 @@
-export const getUserRowFromTable = (table: string[][], userId: number) => {
+export const getUserRow = (table: string[][], userId: number) => {
 	let position = -1;
 
 	for (let i = 0; i < table.length; i++) {

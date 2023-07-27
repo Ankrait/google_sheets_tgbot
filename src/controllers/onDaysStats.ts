@@ -1,10 +1,11 @@
 import { Context } from 'telegraf';
 import { Update } from 'telegraf/types';
 import { editLastMessage } from '../common/utils';
-import { getIsAdmin, getAllUsers } from '../services/services';
+import { getIsAdmin, getDaysStats } from '../services/services';
 import { getMoneyString } from '../common/utils/getMoneyString';
+import { getDateString } from '../common/utils/getDateString';
 
-export const onAllUsers = async (
+export const onDaysStats = async (
 	ctx: Context<Update.MessageUpdate>,
 	next: () => Promise<void>
 ) => {
@@ -19,21 +20,21 @@ export const onAllUsers = async (
 	await ctx.sendChatAction('typing');
 	const { message_id } = await ctx.reply('Загрузка...');
 
-	const users = await getAllUsers();
+	const daysStats = await getDaysStats();
 
 	let resultMessage = '';
-	users.forEach((user) => {
+	daysStats.forEach((row) => {
 		resultMessage +=
 			'<b>' +
-			user.name +
-			'</b>\nДепозит: <b>' +
-			getMoneyString(user.deposit) +
-			'</b>\nБаланс: <b>' +
-			getMoneyString(user.balance) +
+			getDateString(row.day) +
+			'</b>\nНачало дня: <b>' +
+			getMoneyString(row.startBalance) +
+			'</b>\nКонец дня: <b>' +
+			getMoneyString(row.endBalance) +
 			'</b>\nПрофит: ' +
-			(user.profit > 0 ? '✅ ' : '🔻 ') +
+			(row.endBalance - row.startBalance > 0 ? '✅ ' : '🔻 ') +
 			'<b>' +
-			getMoneyString(Math.abs(user.profit)) +
+			getMoneyString(Math.abs(row.endBalance - row.startBalance)) +
 			'</b>\n\n';
 	});
 

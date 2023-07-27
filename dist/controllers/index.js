@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.start = exports.inDev = exports.onAllUsers = exports.onStatistics = exports.onAnyMessage = exports.onDayProfit = exports.onFinance = void 0;
+exports.start = exports.inDev = exports.onDaysStats = exports.onAllUsers = exports.onStatistics = exports.onAnyMessage = exports.onDayProfit = exports.onFinance = exports.sendDailyMessage = void 0;
+var sendDailyMessage_1 = require("./sendDailyMessage");
+Object.defineProperty(exports, "sendDailyMessage", { enumerable: true, get: function () { return sendDailyMessage_1.sendDailyMessage; } });
 var onFinance_1 = require("./onFinance");
 Object.defineProperty(exports, "onFinance", { enumerable: true, get: function () { return onFinance_1.onFinance; } });
 var onDayProfit_1 = require("./onDayProfit");
@@ -11,6 +13,8 @@ var onStatistics_1 = require("./onStatistics");
 Object.defineProperty(exports, "onStatistics", { enumerable: true, get: function () { return onStatistics_1.onStatistics; } });
 var onAllUsers_1 = require("./onAllUsers");
 Object.defineProperty(exports, "onAllUsers", { enumerable: true, get: function () { return onAllUsers_1.onAllUsers; } });
+var onDaysStats_1 = require("./onDaysStats");
+Object.defineProperty(exports, "onDaysStats", { enumerable: true, get: function () { return onDaysStats_1.onDaysStats; } });
 var inDev_1 = require("./inDev");
 Object.defineProperty(exports, "inDev", { enumerable: true, get: function () { return inDev_1.inDev; } });
 var start_1 = require("./start");
