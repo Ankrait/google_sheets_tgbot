@@ -1,7 +1,7 @@
 import { Markup } from 'telegraf';
 import { userActionsEnum } from '../common/enums';
 
-export const defaultMarkup = Markup.keyboard(
+export const userMarkup = Markup.keyboard(
 	[
 		userActionsEnum.Finance,
 		userActionsEnum.DayProfit,

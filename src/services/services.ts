@@ -1,7 +1,7 @@
 import { getNumber, parseDate } from '../common/utils';
 import { getTable } from './getTable';
 import { getUserRowFromTable } from './getUserRowFromTable';
-import { IDayProfit, IUserFinance } from './services.interface';
+import { IDayProfit, IUserFinance, IDaysStats } from './services.interface';
 
 export const getUserFinance = async (id: number): Promise<IUserFinance | null> => {
 	const userTable = await getTable('users');
@@ -97,8 +97,6 @@ export const getAllUsers = async (): Promise<IUserFinance[]> => {
 
 	const users: IUserFinance[] = [];
 
-	console.log(userTable);
-
 	for (let i = 0; i < userTable.length; i++) {
 		if (userTable[i].length < 7) {
 			continue;
@@ -114,4 +112,25 @@ export const getAllUsers = async (): Promise<IUserFinance[]> => {
 	}
 
 	return users;
+};
+
+export const getDaysStats = async (): Promise<IDaysStats[]> => {
+	const daysTable = await getTable('days');
+
+	const result: IDaysStats[] = [];
+
+	for (let dayI = 0; dayI < daysTable.length; dayI++) {
+		const currentDate = parseDate(daysTable[dayI][1]);
+		if (!currentDate) {
+			continue;
+		}
+
+		result.push({
+			day: currentDate,
+			startBalance: getNumber(daysTable[dayI][2]),
+			endBalance: getNumber(daysTable[dayI][3]),
+		});
+	}
+
+	return result;
 };

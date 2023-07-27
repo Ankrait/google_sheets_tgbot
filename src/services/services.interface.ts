@@ -10,3 +10,9 @@ export interface IDayProfit {
 	day: Date;
 	profit: number;
 }
+
+export interface IDaysStats {
+	day: Date;
+	startBalance: number;
+	endBalance: number;
+}
