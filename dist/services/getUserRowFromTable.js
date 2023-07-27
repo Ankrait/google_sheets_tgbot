@@ -4,7 +4,11 @@ exports.getUserRowFromTable = void 0;
 const getUserRowFromTable = (table, userId) => {
     let position = -1;
     for (let i = 0; i < table.length; i++) {
-        if (+table[i][4] === userId) {
+        const hasIdFound = table[i][4]
+            .split(',')
+            .map((el) => el.trim())
+            .includes(userId.toString());
+        if (hasIdFound) {
             position = i;
             break;
         }

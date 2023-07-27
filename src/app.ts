@@ -13,7 +13,7 @@ import {
 } from './controllers';
 import { getConfig } from './config/config';
 
-export const bot = new Telegraf(getConfig('TOKEN_DEV'));
+export const bot = new Telegraf(getConfig('TOKEN'));
 const tasks: cron.ScheduledTask[] = [];
 
 bot.start(start);

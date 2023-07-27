@@ -10,13 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.onAnyMessage = void 0;
-const defaultMarkup_1 = require("../markups/defaultMarkup");
+const userMarkup_1 = require("../markups/userMarkup");
 const adminMarkup_1 = require("../markups/adminMarkup");
 const services_1 = require("../services/services");
 const onAnyMessage = (ctx) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = ctx.from.id;
     const isAdmin = yield (0, services_1.getIsAdmin)(userId);
-    const markup = isAdmin ? adminMarkup_1.adminMarkup : defaultMarkup_1.defaultMarkup;
+    const markup = isAdmin ? adminMarkup_1.adminMarkup : userMarkup_1.userMarkup;
     ctx.reply('Выберите действие', markup);
 });
 exports.onAnyMessage = onAnyMessage;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllUsers = exports.getIsAdmin = exports.getStatistics = exports.getDayProfit = exports.getUserFinance = void 0;
+exports.getDaysStats = exports.getAllUsers = exports.getIsAdmin = exports.getStatistics = exports.getDayProfit = exports.getUserFinance = void 0;
 const utils_1 = require("../common/utils");
 const getTable_1 = require("./getTable");
 const getUserRowFromTable_1 = require("./getUserRowFromTable");
@@ -90,7 +90,6 @@ exports.getIsAdmin = getIsAdmin;
 const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     const userTable = yield (0, getTable_1.getTable)('users');
     const users = [];
-    console.log(userTable);
     for (let i = 0; i < userTable.length; i++) {
         if (userTable[i].length < 7) {
             continue;
@@ -106,3 +105,20 @@ const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     return users;
 });
 exports.getAllUsers = getAllUsers;
+const getDaysStats = () => __awaiter(void 0, void 0, void 0, function* () {
+    const daysTable = yield (0, getTable_1.getTable)('days');
+    const result = [];
+    for (let dayI = 0; dayI < daysTable.length; dayI++) {
+        const currentDate = (0, utils_1.parseDate)(daysTable[dayI][1]);
+        if (!currentDate) {
+            continue;
+        }
+        result.push({
+            day: currentDate,
+            startBalance: (0, utils_1.getNumber)(daysTable[dayI][2]),
+            endBalance: (0, utils_1.getNumber)(daysTable[dayI][3]),
+        });
+    }
+    return result;
+});
+exports.getDaysStats = getDaysStats;

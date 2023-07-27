@@ -10,13 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.start = void 0;
-const defaultMarkup_1 = require("../markups/defaultMarkup");
+const userMarkup_1 = require("../markups/userMarkup");
 const services_1 = require("../services/services");
 const adminMarkup_1 = require("../markups/adminMarkup");
 const start = (ctx) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = ctx.from.id;
     const isAdmin = yield (0, services_1.getIsAdmin)(userId);
-    const markup = isAdmin ? adminMarkup_1.adminMarkup : defaultMarkup_1.defaultMarkup;
+    const markup = isAdmin ? adminMarkup_1.adminMarkup : userMarkup_1.userMarkup;
     ctx.replyWithSticker('CAACAgIAAxkBAAIDhWS6bctHMkinzJ14I4I36jYeg_RzAALdDgACTV3wSyj9qXggllKeLwQ', markup);
 });
 exports.start = start;
